@@ -1,0 +1,60 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200italic,400,600,600italic,700">
+
+    <style>
+        * {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        body {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background: blue;
+            border: 0;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+    </style>
+
+</head>
+
+<body>
+
+    <div>
+
+        <h1>ProbaClick</h1>
+
+        <p>After being hovered over for 1 second, these buttons will turn red.</p>
+        <br>
+
+        <button>Button #1</button>
+        <button>Button #2</button>
+        <button>Button #3</button>
+
+    </div>
+
+    <script src="dist/probaclick.min.js"></script>
+
+    <script>
+        ProbaClick(document.querySelectorAll('button'), {
+            delay: 1000,
+            callback: function (element) {
+                element.style.background = 'red';
+            }
+        });
+    </script>
+</body>
+
+</html>
