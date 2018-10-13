@@ -4,6 +4,8 @@ Do something when someone's probably going to click something.
 
 [![Build Status](https://travis-ci.org/alexmacarthur/probaclick.svg?branch=master)](https://travis-ci.org/alexmacarthur/probaclick)
 
+![ProbaClick Example](probaclick-example.gif "ProbaClick Example")
+
 ## Overview
 
 ProbaClick fires a callback when a user hovers over an element for a specified length of time. It's designed under the assumption that when a user spends a certain amount of time hovering over an item, it's likely that they're about click or interact with it in some way. By anticipating that click, you're able to perform an action before the user actually does it.
