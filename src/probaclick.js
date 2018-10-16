@@ -3,7 +3,7 @@ import toArrayOfNodes from "./toArrayOfNodes";
 
 export default function(
   elements,
-  { max = null, delay = 500, callback = () => {} } = {}
+  { max = null, delay = 500, count = null, callback = () => {} } = {}
 ) {
   elements = toArrayOfNodes(elements);
 
@@ -13,7 +13,8 @@ export default function(
     return new ElementWatcher(link, {
       delay,
       callback,
-      max
+      max,
+      count
     });
   });
 }

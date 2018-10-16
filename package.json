@@ -1,7 +1,7 @@
 {
   "name": "probaclick",
-  "version": "1.0.0",
-  "description": "Predict a and respond to a user's intention by the amount of time they spend hovering over an element.",
+  "version": "1.1.0",
+  "description": "Do something when someone is probably going to click something.",
   "main": "src/probaclick.js",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   ],
   "homepage": "https://github.com/alexmacarthur/probaclick#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.5",
     "babel-cli": "^6.26.0",
     "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.2",
@@ -41,7 +41,7 @@
     "jest": "^23.6.0",
     "jest-date-mock": "^1.0.5",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.8.2",
+    "prettier": "^1.15.2",
     "webpack": "^3.8.1"
   }
 }

@@ -1,14 +1,20 @@
 export default class ElementWatcher {
-  constructor(link, { max, delay, callback } = {}) {
+  constructor(link, { max, delay, callback, count } = {}) {
     this.max = max;
     this.link = link;
-    this.delay = delay;
     this.callback = callback;
+    this.triggers = { delay, count };
 
-    this.fireCount = 0;
+    this.hasJustFired = false;
+    this.totalFireCount = 0;
     this.hoverStart = 0;
-    this.timerStore = 0;
     this.timeout = null;
+
+    this.store = {
+      time: 0,
+      interactions: 0
+    };
+
     this.eventHandlers = {
       mouseover: this.handleMouseOver.bind(this),
       mouseleave: this.handleMouseLeave.bind(this)
@@ -17,32 +23,64 @@ export default class ElementWatcher {
     this.attachListeners();
   }
 
-  attachListeners() {
-    this.link.addEventListener("mouseover", this.eventHandlers.mouseover);
-    this.link.addEventListener("mouseleave", this.eventHandlers.mouseleave);
+  handleMouseOver() {
+    this.hasJustFired = false;
+    this.hoverStart = Date.now();
+    this.store.interactions++;
+
+    if (this.maybeFireBasedOnCount()) {
+      return;
+    }
+
+    this.maybeFireBasedOnTime();
   }
 
-  handleMouseOver() {
-    this.hoverStart = Date.now();
+  maybeFireBasedOnCount() {
+    if (this.triggers.count === null) false;
+
+    if (this.store.interactions >= this.triggers.count) {
+      this.fire();
+      return true;
+    }
+
+    return false;
+  }
+
+  maybeFireBasedOnTime() {
+    if (this.triggers.delay === null) return false;
 
     this.timeout = setTimeout(() => {
-      //-- FIRE!
-      this.callback(this.link);
+      this.fire();
+    }, this.triggers.delay - this.store.time);
+  }
 
-      this.fireCount++;
+  fire() {
+    this.callback(this.link);
 
-      this.timerStore = 0;
+    this.totalFireCount++;
 
-      if (this.max !== null && this.fireCount >= this.max) {
-        this.removeListeners();
-      }
-    }, this.delay - this.timerStore);
+    this.resetStore();
+
+    this.hasJustFired = true;
+
+    if (this.max !== null && this.totalFireCount >= this.max) {
+      this.removeListeners();
+    }
   }
 
   handleMouseLeave() {
-    //-- Do not update immediately after firing.
-    this.updateTimerStore();
     clearTimeout(this.timeout);
+
+    if (this.hasJustFired) {
+      return;
+    }
+
+    this.updateStoreTime();
+  }
+
+  attachListeners() {
+    this.link.addEventListener("mouseover", this.eventHandlers.mouseover);
+    this.link.addEventListener("mouseleave", this.eventHandlers.mouseleave);
   }
 
   removeListeners() {
@@ -51,8 +89,14 @@ export default class ElementWatcher {
     }
   }
 
-  updateTimerStore() {
-    this.timerStore = this.timerStore + (Date.now() - this.hoverStart);
-    return this.timerStore;
+  resetStore() {
+    this.store = {
+      time: 0,
+      interactions: 0
+    };
+  }
+
+  updateStoreTime() {
+    this.store.time = this.store.time + (Date.now() - this.hoverStart);
   }
 }
