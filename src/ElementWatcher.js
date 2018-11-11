@@ -36,7 +36,7 @@ export default class ElementWatcher {
   }
 
   maybeFireBasedOnCount() {
-    if (this.triggers.count === null) false;
+    if (this.triggers.count === null) return false;
 
     if (this.store.interactions >= this.triggers.count) {
       this.fire();

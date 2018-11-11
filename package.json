@@ -1,6 +1,6 @@
 {
   "name": "probaclick",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Do something when someone is probably going to click something.",
   "main": "src/probaclick.js",
   "repository": {
