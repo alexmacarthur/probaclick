@@ -29,12 +29,13 @@
   ],
   "homepage": "https://github.com/alexmacarthur/probaclick#readme",
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.1.5",
-    "babel-cli": "^6.26.0",
+    "@babel/preset-env": "^7.1.5",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "babili-webpack-plugin": "^0.1.2",
+    "babel-loader": "^8.0.4",
+    "babel-minify-webpack-plugin": "^0.3.1",
     "banner-webpack-plugin": "^0.2.3",
     "concurrently": "^4.0.1",
     "express": "^4.16.4",
@@ -42,6 +43,8 @@
     "jest-date-mock": "^1.0.5",
     "pre-commit": "^1.2.2",
     "prettier": "^1.15.2",
+    "regenerator-runtime": "^0.12.1",
     "webpack": "^3.8.1"
-  }
+  },
+  "dependencies": {}
 }

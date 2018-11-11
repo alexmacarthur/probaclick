@@ -1,12 +1,12 @@
 const webpack = require('webpack');
-const BabiliPlugin = require("babili-webpack-plugin");
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 const pkg = require('./package.json');
 const isProd = process.env.NODE_ENV === 'production';
 
 let plugins = [];
 
 if(isProd) {
-  plugins.push(new BabiliPlugin());
+  plugins.push(new MinifyPlugin());
 }
 
 const banner = `
@@ -42,5 +42,5 @@ module.exports = {
       }
     ]
   },
-  plugins: plugins
+  plugins
 };
