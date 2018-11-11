@@ -52,6 +52,8 @@ export default class ElementWatcher {
     this.timeout = setTimeout(() => {
       this.fire();
     }, this.triggers.delay - this.store.time);
+
+    return this.timeout;
   }
 
   fire() {
