@@ -20,7 +20,7 @@ export default class ElementWatcher {
       mouseleave: this.handleMouseLeave.bind(this)
     };
 
-    this.attachListeners();
+    this.updateListeners("add");
   }
 
   handleMouseOver() {
@@ -66,7 +66,7 @@ export default class ElementWatcher {
     this.hasJustFired = true;
 
     if (this.max !== null && this.totalFireCount >= this.max) {
-      this.removeListeners();
+      this.updateListeners("remove");
     }
   }
 
@@ -80,14 +80,9 @@ export default class ElementWatcher {
     this.updateStoreTime();
   }
 
-  attachListeners() {
-    this.link.addEventListener("mouseover", this.eventHandlers.mouseover);
-    this.link.addEventListener("mouseleave", this.eventHandlers.mouseleave);
-  }
-
-  removeListeners() {
+  updateListeners(type) {
     for (let i in this.eventHandlers) {
-      this.link.removeEventListener(i, this.eventHandlers[i]);
+      this.link[`${type}EventListener`](i, this.eventHandlers[i]);
     }
   }
 
