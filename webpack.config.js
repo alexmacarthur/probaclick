@@ -1,13 +1,7 @@
 const webpack = require('webpack');
-const MinifyPlugin = require("babel-minify-webpack-plugin");
 const pkg = require('./package.json');
-const isProd = process.env.NODE_ENV === 'production';
 
 let plugins = [];
-
-if(isProd) {
-  plugins.push(new MinifyPlugin());
-}
 
 const banner = `
   ${pkg.name} - ${pkg.description}
