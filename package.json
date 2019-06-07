@@ -13,10 +13,10 @@
   ],
   "scripts": {
     "test": "jest",
-    "prettify": "prettier src/* --write",
+    "prettify": "prettier \"src/**/*.{md,js}\" --write",
+    "precommit": "pretty-quick --staged",
     "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js --watch",
-    "build": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js && npm run prettify",
-    "prettify-and-add": "npm run prettify && git add -A",
+    "build": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
     "serve": "concurrently --kill-others \"npm run dev\" \"node serve.js\""
   },
   "author": "Alex MacArthur",
@@ -24,9 +24,6 @@
   "bugs": {
     "url": "https://github.com/alexmacarthur/probaclick/issues"
   },
-  "pre-commit": [
-    "prettify-and-add"
-  ],
   "homepage": "https://github.com/alexmacarthur/probaclick#readme",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -39,10 +36,11 @@
     "banner-webpack-plugin": "^0.2.3",
     "concurrently": "^4.0.1",
     "express": "^4.16.4",
+    "husky": "^2.4.0",
     "jest": "^23.6.0",
     "jest-date-mock": "^1.0.5",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.15.2",
+    "pretty-quick": "^1.11.0",
     "regenerator-runtime": "^0.12.1",
     "webpack": "^3.8.1"
   },
