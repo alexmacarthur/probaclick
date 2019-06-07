@@ -20,6 +20,7 @@ const banner = `
 plugins.push(new webpack.BannerPlugin({ banner }));
 
 module.exports = {
+  mode: process.env.NODE_ENV,
   entry: {
     ProbaClick: './src/probaclick.js'
   },
@@ -28,10 +29,11 @@ module.exports = {
     library: 'ProbaClick',
     libraryTarget: 'umd',
     libraryExport: "default",
-    filename: 'probaclick.min.js'
+    filename: 'probaclick.min.js',
+    globalObject: "this"
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
