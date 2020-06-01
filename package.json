@@ -2,7 +2,8 @@
   "name": "probaclick",
   "version": "1.1.1",
   "description": "Do something when someone is probably going to click something.",
-  "main": "src/probaclick.js",
+  "main": "dist/probaclick.min.js",
+  "module": "dist/probaclick.es.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alexmacarthur/probaclick.git"
@@ -14,34 +15,42 @@
   "scripts": {
     "test": "jest",
     "prettify": "prettier \"src/**/*.{md,js}\" --write",
-    "precommit": "pretty-quick --staged",
-    "dev": "NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js --watch",
-    "build": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
-    "serve": "concurrently --kill-others \"npm run dev\" \"node serve.js\""
+    "rollup": "NODE_ENV=production rollup -c",
+    "watch": "NODE_ENV=development rollup -c -w",
+    "build": "npm run rollup",
+    "serve": "concurrently --kill-others \"npm run watch\" \"node serve.js\""
   },
   "author": "Alex MacArthur",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/alexmacarthur/probaclick/issues"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "homepage": "https://github.com/alexmacarthur/probaclick#readme",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^26.0.1",
     "babel-loader": "^8.0.6",
-    "banner-webpack-plugin": "^0.2.3",
-    "concurrently": "^4.1.0",
+    "concurrently": "^5.2.0",
     "express": "^4.17.1",
-    "husky": "^2.4.0",
-    "jest": "^24.8.0",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
     "jest-date-mock": "^1.0.7",
-    "prettier": "^1.18.0",
-    "pretty-quick": "^1.11.0",
-    "regenerator-runtime": "^0.13.2",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-execute": "^1.1.1",
+    "rollup-plugin-prepack": "^1.1.1",
+    "rollup-plugin-terser": "^5.3.0",
     "webpack": "^4.33.0",
-    "webpack-cli": "^3.3.3"
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {}
 }
