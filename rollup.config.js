@@ -5,9 +5,8 @@ import { terser } from "rollup-plugin-terser";
 const isProduction = process.env.NODE_ENV === "production";
 
 const preamble = `/**
-  * ProbaClick - ${pkg.description}
+  * ProbaClick (v${pkg.version}) - ${pkg.description}
   * Author: ${pkg.author}
-  * Version: v${pkg.version}
   * License: ${pkg.license}
   * URL: ${pkg.homepage}
   */`;
@@ -53,7 +52,6 @@ export default OUTPUT_DATA.map(({ file, format }) => {
   if (isProduction) {
     plugins.push(
       terser({
-        include: [/^.+\.min\.js$/],
         output: {
           preamble,
         },

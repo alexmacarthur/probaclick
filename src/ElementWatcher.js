@@ -1,99 +1,87 @@
-export default class ElementWatcher {
-  constructor(link, { max, delay, callback, count } = {}) {
-    this.max = max;
-    this.link = link;
-    this.callback = callback;
-    this.triggers = { delay, count };
+export default function (link, { max, delay, callback, count } = {}) {
+  function _fire() {
+    callback(link);
 
-    this.hasJustFired = false;
-    this.totalFireCount = 0;
-    this.hoverStart = 0;
-    this.timeout = null;
+    _totalFireCount++;
 
-    this.store = {
-      time: 0,
-      interactions: 0
-    };
+    _resetStore();
 
-    this.eventHandlers = {
-      mouseover: this.handleMouseOver.bind(this),
-      mouseleave: this.handleMouseLeave.bind(this)
-    };
+    _hasJustFired = true;
 
-    this.updateListeners("add");
-  }
-
-  handleMouseOver() {
-    this.hasJustFired = false;
-    this.hoverStart = Date.now();
-    this.store.interactions++;
-
-    if (this.maybeFireBasedOnCount()) {
-      return;
+    if (max !== null && _totalFireCount >= max) {
+      _updateListeners("remove");
     }
-
-    this.maybeFireBasedOnTime();
   }
 
-  maybeFireBasedOnCount() {
-    if (this.triggers.count === null) return false;
+  function _handleMouseLeave() {
+    clearTimeout(_timeout);
+    return _hasJustFired || _updateStoreTime();
+  }
 
-    if (this.store.interactions >= this.triggers.count) {
-      this.fire();
+  function _handleMouseOver() {
+    _hasJustFired = false;
+    _hoverStart = Date.now();
+    _store.interactions++;
+
+    return _maybeFireBasedOnCount() || _maybeFireBasedOnTime();
+  }
+
+  function _updateListeners(type) {
+    for (let i in _mouseEventHandlers) {
+      link[`${type}EventListener`](i, _mouseEventHandlers[i]);
+    }
+  }
+
+  function _maybeFireBasedOnCount() {
+    if (_triggers.count === null) return false;
+
+    if (_store.interactions >= _triggers.count) {
+      _fire();
       return true;
     }
 
     return false;
   }
 
-  maybeFireBasedOnTime() {
-    if (this.triggers.delay === null) return false;
+  function _maybeFireBasedOnTime() {
+    if (_triggers.delay === null) return false;
 
-    this.timeout = setTimeout(() => {
-      this.fire();
-    }, this.triggers.delay - this.store.time);
+    _timeout = setTimeout(() => {
+      _fire();
+    }, _getTimeRemainingUntilFire());
 
-    return this.timeout;
+    return _timeout;
   }
 
-  fire() {
-    this.callback(this.link);
-
-    this.totalFireCount++;
-
-    this.resetStore();
-
-    this.hasJustFired = true;
-
-    if (this.max !== null && this.totalFireCount >= this.max) {
-      this.updateListeners("remove");
-    }
+  function _getTimeRemainingUntilFire() {
+    return _triggers.delay - _store.time;
   }
 
-  handleMouseLeave() {
-    clearTimeout(this.timeout);
-
-    if (this.hasJustFired) {
-      return;
-    }
-
-    this.updateStoreTime();
-  }
-
-  updateListeners(type) {
-    for (let i in this.eventHandlers) {
-      this.link[`${type}EventListener`](i, this.eventHandlers[i]);
-    }
-  }
-
-  resetStore() {
-    this.store = {
+  function _resetStore() {
+    _store = {
       time: 0,
-      interactions: 0
+      interactions: 0,
     };
   }
 
-  updateStoreTime() {
-    this.store.time = this.store.time + (Date.now() - this.hoverStart);
+  function _updateStoreTime() {
+    _store.time = _store.time + (Date.now() - _hoverStart);
   }
+
+  let _triggers = { delay, count };
+  let _hasJustFired = false;
+  let _totalFireCount = 0;
+  let _hoverStart = 0;
+  let _timeout = null;
+  let _store = {
+    time: 0,
+    interactions: 0,
+  };
+
+  const _mouseEventHandlers = {
+    mouseover: _handleMouseOver.bind(this),
+    mouseleave: _handleMouseLeave.bind(this),
+  };
+
+  _updateListeners("add");
 }

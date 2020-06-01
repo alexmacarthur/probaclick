@@ -1,129 +1,84 @@
-import ElementWatcher from '../src/ElementWatcher';
-import { advanceBy, advanceTo, clear } from "jest-date-mock";
-import { watch } from 'fs';
+import ElementWatcher from "../src/ElementWatcher";
 
-afterEach(() => {
-    clear();
-});
+let button;
+let callback;
+let mouseOverEvent;
+let mouseLeaveEvent;
+
+const eventOptions = {
+  view: window,
+  bubbles: true,
+  cancelable: true,
+};
 
 beforeEach(() => {
-    document.body.innerHTML = `
-        <button>A button</button>
-    `;
+  jest.useFakeTimers();
+  document.body.innerHTML = `<button>A button</button>`;
+
+  button = document.querySelector("button");
+  callback = jest.fn();
+  mouseOverEvent = new MouseEvent("mouseover", eventOptions);
+  mouseLeaveEvent = new MouseEvent("mouseleave", eventOptions);
 });
 
-test("Updates timerStore property when starting from nothing.", () => {
-    
-    let watcher = new ElementWatcher(document.querySelector('button'));
-    
-    watcher.hoverStart = new Date(2018, 5, 27, 11, 0, 0).getTime(); // 1530115200000
-    
-    advanceTo(new Date(2018, 5, 27, 12, 0, 0)); // 1530118800000
+test("Fires callback after hover is sustained.", () => {
+  new ElementWatcher(button, { callback });
 
-    watcher.updateStoreTime();
+  button.dispatchEvent(mouseOverEvent);
 
-    expect(watcher.store.time).toEqual(3600000);
+  jest.runAllTimers();
+
+  expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test("Updates store's timer property when starting with something.", () => {
+test("Does not fire calback when no hover occurs.", () => {
+  new ElementWatcher(button, { callback });
 
-    let watcher = new ElementWatcher(document.querySelector('button'));
-    
-    watcher.hoverStart = new Date(2018, 5, 27, 11, 0, 0).getTime(); // 1530115200000
-    
-    advanceTo(new Date(2018, 5, 27, 12, 0, 0)); // 1530118800000
+  jest.runAllTimers();
 
-    watcher.updateStoreTime();
-
-    expect(watcher.store.time).toEqual(3600000);
+  expect(callback).not.toBeCalled();
 });
 
-test("Resets store when called.", () => {
+test("Fires callback when hover count is met.", () => {
+  new ElementWatcher(button, { callback, count: 3 });
 
-    let watcher = new ElementWatcher(document.querySelector('button'));
+  new Array(3).fill().forEach((i) => {
+    button.dispatchEvent(mouseOverEvent);
+    button.dispatchEvent(mouseLeaveEvent);
+  });
 
-    watcher.store = {
-        time: 300, 
-        interactions: 3
-    };
-
-    expect(watcher.store).toEqual({
-        time: 300,
-        interactions: 3
-    });
-    
-    watcher.resetStore();
-
-    expect(watcher.store).toEqual({
-        time: 0,
-        interactions: 0
-    });
+  expect(callback).toBeCalled();
 });
 
-test("Updates hasJustFired property accordingly.", () => {
+test("Doesn't fire callback when hover count isn't met.", () => {
+  new ElementWatcher(button, { callback, count: 3 });
 
-    let watcher = new ElementWatcher(document.querySelector('button'), {
-        callback: () => {}
-    });
+  new Array(2).fill().forEach((i) => {
+    button.dispatchEvent(mouseOverEvent);
+    button.dispatchEvent(mouseLeaveEvent);
+  });
 
-    expect(watcher.hasJustFired).toBe(false);
-    
-    watcher.fire();
-    
-    expect(watcher.hasJustFired).toBe(true);
-    
-    watcher.handleMouseOver();
-    
-    expect(watcher.hasJustFired).toBe(false);
+  expect(callback).not.toBeCalled();
 });
 
-describe("maybeFireBasedOnCount", () => {
-    test("Returns false when there's no count trigger set.", () => {
-        let watcher = new ElementWatcher(document.querySelector('button'), {
-            callback: () => {},
-            count: null
-        });
+test("Fires callback repeatedly.", () => {
+  new ElementWatcher(button, { callback, count: 3 });
 
-        expect(watcher.maybeFireBasedOnCount()).toBe(false);
-    }); 
+  new Array(6).fill().forEach((i) => {
+    button.dispatchEvent(mouseOverEvent);
+    button.dispatchEvent(mouseLeaveEvent);
+  });
 
-    test("Returns false when there is a count trigger set, but interaction count isn't enough.", () => {
-        let watcher = new ElementWatcher(document.querySelector('button'), {
-            callback: () => {},
-            count: 3
-        });
-
-        expect(watcher.maybeFireBasedOnCount()).toBe(false);
-    }); 
-
-    test("Returns true when there is a count trigger set and interaction count is enough.", () => {
-        let watcher = new ElementWatcher(document.querySelector('button'), {
-            callback: () => {},
-            count: 3
-        });
-
-        watcher.store.interactions = 3;
-
-        expect(watcher.maybeFireBasedOnCount()).toBe(true);
-    }); 
+  expect(callback).toHaveBeenCalledTimes(2);
 });
 
-describe("maybeFireBasedOnTime", () => {
-    test("Returns false when there's no delay trigger set.", () => {
-        let watcher = new ElementWatcher(document.querySelector('button'), {
-            callback: () => {},
-            delay: null
-        });
+test("Fires callback repeatedly until max has been hit.", () => {
+  new ElementWatcher(button, { callback, count: 3, max: 2 });
 
-        expect(watcher.maybeFireBasedOnTime()).toBe(false);
-    }); 
+  new Array(9).fill().forEach((i) => {
+    button.dispatchEvent(mouseOverEvent);
+    button.dispatchEvent(mouseLeaveEvent);
+  });
 
-    test("Returns true when there is a delay trigger set and hover time is enough.", () => {
-        let watcher = new ElementWatcher(document.querySelector('button'), {
-            callback: () => {},
-            delay: 3
-        });
-
-        expect(watcher.maybeFireBasedOnTime()).toBeTruthy();
-    }); 
+  expect(callback).toHaveBeenCalledTimes(2);
 });
