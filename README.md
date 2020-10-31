@@ -2,8 +2,6 @@
 
 Do something when someone's probably going to click something.
 
-[![Build Status](https://travis-ci.org/alexmacarthur/probaclick.svg?branch=master)](https://travis-ci.org/alexmacarthur/probaclick)
-
 ![ProbaClick Example](probaclick-example.gif "ProbaClick Example")
 
 ## Overview
@@ -20,11 +18,11 @@ To use, pass a NodeList, Node, or string selector, and define your options.
 
 ```js
 //-- Turn each button red when it's hovered over for a second.
-ProbaClick(document.querySelectorAll('button'), {
-    callback: function (element) {
-        element.style.background = 'red';
-    }, 
-    delay: 1000
+ProbaClick(document.querySelectorAll("button"), {
+  callback: function (element) {
+    element.style.background = "red";
+  },
+  delay: 1000,
 });
 ```
 
@@ -32,13 +30,13 @@ ProbaClick(document.querySelectorAll('button'), {
 
 By default, ProbaClick will fire its callback method after a certain amount of total time hovered. For example, if `delay` is set to `1000`, the callback will fire after a user hovers twice at 500ms each, once at 1000ms, or any other number of hovers whose durations add up to at least 1000ms.
 
-However, it's also possible to trigger the callback based on the total number of hovers, regardless of the amount of time spent hovering. The following configuration will fire the callback after a total hover time of 1000ms OR when the user has hovered over the element 3 times. 
+However, it's also possible to trigger the callback based on the total number of hovers, regardless of the amount of time spent hovering. The following configuration will fire the callback after a total hover time of 1000ms OR when the user has hovered over the element 3 times.
 
 ```js
-ProbaClick(document.querySelectorAll('button'), {
-    callback: function (element) {}, 
-    delay: 1000,
-    count: 3
+ProbaClick(document.querySelectorAll("button"), {
+  callback: function (element) {},
+  delay: 1000,
+  count: 3,
 });
 ```
 
@@ -47,25 +45,26 @@ After the callback has fired, the total hover time and hover count will be reset
 ## Arguments
 
 ### Elements
-Any of the following are valid: 
+
+Any of the following are valid:
 
 ```js
-ProbaClick(document.querySelectorAll('a.class')) // ...
+ProbaClick(document.querySelectorAll("a.class")); // ...
 ```
 
 ```js
-ProbaClick(document.querySelector('a.class')) // ... 
+ProbaClick(document.querySelector("a.class")); // ...
 ```
 
 ```js
-ProbaClick('a.class') // ...
+ProbaClick("a.class"); // ...
 ```
 
 ### Options
 
-|Option|Description|Default|
-|---|---|---|
-|callback|The function that will fire after the delay is met.|`function(){}`|
-|delay|The amount of milliseconds to wait before firing the callback.|`500`|
-|count|The number of individual hovers to allow before fireing the callback.|`null`|
-|max|The maximum number of times the callback will fire after repeatedly hovering over it. Not specifying this value will allow the callback to fire over and over with no limit as a user meets the hover threshold. After the max has been met, event listeners will be removed. |false|
+| Option   | Description                                                                                                                                                                                                                                                                   | Default        |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| callback | The function that will fire after the delay is met.                                                                                                                                                                                                                           | `function(){}` |
+| delay    | The amount of milliseconds to wait before firing the callback.                                                                                                                                                                                                                | `500`          |
+| count    | The number of individual hovers to allow before fireing the callback.                                                                                                                                                                                                         | `null`         |
+| max      | The maximum number of times the callback will fire after repeatedly hovering over it. Not specifying this value will allow the callback to fire over and over with no limit as a user meets the hover threshold. After the max has been met, event listeners will be removed. | false          |

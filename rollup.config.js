@@ -5,7 +5,7 @@ import { terser } from "rollup-plugin-terser";
 const isProduction = process.env.NODE_ENV === "production";
 
 const preamble = `/**
-  * ProbaClick (v${pkg.version}) - ${pkg.description}
+  * ProbaClick (v${pkg.version})
   * Author: ${pkg.author}
   * License: ${pkg.license}
   * URL: ${pkg.homepage}
