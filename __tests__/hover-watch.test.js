@@ -1,19 +1,24 @@
-import ProbaClick from '../src/probaclick';
-import ElementWatcher from '../src/ElementWatcher';
+import ProbaClick from "../src/probaclick";
+import * as ElementWatcher from "../src/ElementWatcher";
+
+let elementWatcherSpy;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  elementWatcherSpy = jest.spyOn(ElementWatcher, "default");
+});
 
 test("Returns instances of ElementWatcher.", () => {
-
   document.body.innerHTML = `
     <button>A button</button>
   `;
 
-    let watchers = ProbaClick('button');
+  ProbaClick("button");
 
-    expect(watchers[0]).toBeInstanceOf(ElementWatcher);
+  expect(elementWatcherSpy).toHaveBeenCalledTimes(1);
 });
 
 test("Returns multiple instances if elements exist.", () => {
-
   document.body.innerHTML = `
     <button>A button</button>
     <button>A button</button>
@@ -21,10 +26,12 @@ test("Returns multiple instances if elements exist.", () => {
     <a>A link</a>
   `;
 
-    expect(ProbaClick('button')).toHaveLength(3);
+  ProbaClick("button");
+  expect(elementWatcherSpy).toHaveBeenCalledTimes(3);
 });
 
 test("Returns empty array when no elements exist.", () => {
-    document.body.innerHTML = ``;
-    expect(ProbaClick('button')).toHaveLength(0);
+  document.body.innerHTML = ``;
+  ProbaClick("button");
+  expect(elementWatcherSpy).toHaveBeenCalledTimes(0);
 });

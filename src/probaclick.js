@@ -5,7 +5,7 @@ export default function (
   elements,
   { max = null, delay = 500, count = null, callback = () => {} } = {}
 ) {
-  return toArrayOfNodes(elements).map((link) => {
+  let watchers = toArrayOfNodes(elements).map((link) => {
     return new ElementWatcher(link, {
       delay,
       callback,
@@ -13,4 +13,10 @@ export default function (
       count,
     });
   });
+
+  return {
+    remove: () => {
+      watchers.forEach((w) => w.remove());
+    },
+  };
 }

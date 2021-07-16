@@ -1,4 +1,4 @@
-export default function(thing) {
+export default function (thing) {
   if (typeof thing === "string") {
     thing = document.querySelectorAll(thing);
   } else if (!(thing instanceof NodeList)) {

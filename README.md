@@ -1,5 +1,7 @@
 # ProbaClick
 
+[![Bundle Size](https://badgen.net/bundlephobia/minzip/probaclick)](https://bundlephobia.com/result?p=probaclick)
+
 Do something when someone's probably going to click something.
 
 ![ProbaClick Example](probaclick-example.gif "ProbaClick Example")
@@ -16,7 +18,7 @@ The use cases are wide, but perhaps the most common is to dynamically fetch reso
 
 To use, pass a NodeList, Node, or string selector, and define your options.
 
-```js
+```javascript
 //-- Turn each button red when it's hovered over for a second.
 ProbaClick(document.querySelectorAll("button"), {
   callback: function (element) {
@@ -32,7 +34,7 @@ By default, ProbaClick will fire its callback method after a certain amount of t
 
 However, it's also possible to trigger the callback based on the total number of hovers, regardless of the amount of time spent hovering. The following configuration will fire the callback after a total hover time of 1000ms OR when the user has hovered over the element 3 times.
 
-```js
+```javascript
 ProbaClick(document.querySelectorAll("button"), {
   callback: function (element) {},
   delay: 1000,
@@ -42,21 +44,39 @@ ProbaClick(document.querySelectorAll("button"), {
 
 After the callback has fired, the total hover time and hover count will be reset to zero.
 
+### Cleaning Up Event Listeners
+
+In some cases (like when using a framework like React), you may need to imperatively remove the event listeners registered by `ProbaClick` before it's had a chance to respond to any interactions. To remove listeners registered by an instance, use the provided `remove()` method. For example, in a React component, usage may look like this:
+
+```javascript
+useEffect(() => {
+  // Create an instance once the component mounts.
+  const instance = ProbaClick("button", {
+    // options
+  });
+
+  // When it unmounts, remove the listeners registered by ProbaClick.
+  return () => {
+    instance.remove();
+  };
+}, []);
+```
+
 ## Arguments
 
 ### Elements
 
 Any of the following are valid:
 
-```js
+```javascript
 ProbaClick(document.querySelectorAll("a.class")); // ...
 ```
 
-```js
+```javascript
 ProbaClick(document.querySelector("a.class")); // ...
 ```
 
-```js
+```javascript
 ProbaClick("a.class"); // ...
 ```
 
