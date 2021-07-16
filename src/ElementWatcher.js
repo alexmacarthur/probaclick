@@ -84,4 +84,8 @@ export default function (link, { max, delay, callback, count } = {}) {
   };
 
   _updateListeners("add");
+
+  return {
+    remove: () => _updateListeners("remove"),
+  };
 }
